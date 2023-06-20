@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace RemoteMvpApp
 {
@@ -51,7 +52,21 @@ namespace RemoteMvpApp
 
             User newUser = new(username, password);
             _users.Add(newUser);
+
+            SaveUserToCSV(_users);
+
             return UserListActionResult.RegistrationOk;
+        }
+
+        private void SaveUserToCSV(List<User> users)
+        {
+            using (var file = File.CreateText(Path.Combine(Environment.CurrentDirectory, "users.csv")))
+            {
+                foreach (var user in users)
+                {
+                    file.WriteLine(user.UserName+";"+ user.Password);
+                }
+            }
         }
 
         public void RemoveUser(string username)
