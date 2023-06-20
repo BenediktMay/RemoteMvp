@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RemoteMVPAdmin\RemoteMVPAdmin.csproj" />
     <ProjectReference Include="..\RemoteMvpServer\RemoteMvpLib.csproj" />
     <ProjectReference Include="..\RemoteMvp\RemoteMvpClient.csproj" />
   </ItemGroup>

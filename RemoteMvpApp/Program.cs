@@ -17,3 +17,6 @@ Task serverTask = server.RunActionEndPointAsync();  // Asynchronous (non-blockin
 var client = new RemoteActionAdapter("localhost", 11000);
 var clientController = new ClientPresenter(client);
 clientController.OpenUI(true);
+
+
+//serverTask.Wait();
