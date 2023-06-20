@@ -95,7 +95,7 @@ namespace RemoteMvpLib
         private RemoteActionRequest Deserialize(string requestString)
         {
             string[] parts = requestString.Split(';');
-            RemoteActionRequest request = new RemoteActionRequest(Enum.Parse<ActionType>(parts[0]), parts[1], parts[2]);
+            RemoteActionRequest request = new RemoteActionRequest(Enum.Parse<ActionType>(parts[0]), parts[1], parts[2], Enum.Parse<UserType>(parts[3]));
             return request;
         }
 

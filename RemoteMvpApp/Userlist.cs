@@ -13,7 +13,9 @@ namespace RemoteMvpApp
         UserAlreadyExists,
         UserOkPasswordWrong,
         AccessGranted,
-        RegistrationOk
+        RegistrationOk,
+        AccessDenied,
+        UserDelted
     }
 
     internal class Userlist

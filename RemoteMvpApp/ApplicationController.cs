@@ -45,7 +45,11 @@ namespace RemoteMvpApp
                     Process_Register(handler, request.UserName, request.Password);
                     break;
                 case ActionType.Delete:
-                    Process_Delete(handler, request.UserName, request.Password);
+                    if (request.UserType == UserType.Admin)
+                    {
+                        Process_Delete(handler, request.UserName, request.Password);
+                    }
+                    else throw new NotImplementedException();//TODO SEND ERROR MESSAGE
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("Request not supported");
@@ -92,22 +96,11 @@ namespace RemoteMvpApp
 
         private void Process_Delete(RemoteActionEndpoint handler, string username, string password)
         {
-            switch (_users.LoginUser(username, password))
-            {
-                //case UserListActionResult.AccessGranted:
-                //    handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, $"Access granted for {username}."));
-                //    break;
-                //case UserListActionResult.UserOkPasswordWrong:
-                //    handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Error, "Wrong password."));
-                //    break;
-                //case UserListActionResult.UserNotExisting:
-                //    handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Error, $"User {username} not existing."));
-                //    break;
-                //default:
-                //    handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Error, "Unsupported action."));
-                //    break;
-            }
+            _users.RemoveUser(username);
+            handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, "User was deleted (probably fails silent ;) )"));
         }
+
+
             /// <summary>
             /// Helper method to parse semicolon-separated key=value pairs
             /// </summary>
