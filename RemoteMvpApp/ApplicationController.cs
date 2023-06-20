@@ -44,6 +44,9 @@ namespace RemoteMvpApp
                 case ActionType.Register:
                     Process_Register(handler, request.UserName, request.Password);
                     break;
+                case ActionType.Delete:
+                    Process_Delete(handler, request.UserName, request.Password);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException("Request not supported");
             }
@@ -87,12 +90,30 @@ namespace RemoteMvpApp
             }
         }
 
-        /// <summary>
-        /// Helper method to parse semicolon-separated key=value pairs
-        /// </summary>
-        /// <param name="cmd">A string semicolon-separated key=value pairs</param>
-        /// <returns>A dictionary with key value pairs</returns>
-        private Dictionary<string, string> ProcessCmd(string cmd)
+        private void Process_Delete(RemoteActionEndpoint handler, string username, string password)
+        {
+            switch (_users.LoginUser(username, password))
+            {
+                //case UserListActionResult.AccessGranted:
+                //    handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, $"Access granted for {username}."));
+                //    break;
+                //case UserListActionResult.UserOkPasswordWrong:
+                //    handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Error, "Wrong password."));
+                //    break;
+                //case UserListActionResult.UserNotExisting:
+                //    handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Error, $"User {username} not existing."));
+                //    break;
+                //default:
+                //    handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Error, "Unsupported action."));
+                //    break;
+            }
+        }
+            /// <summary>
+            /// Helper method to parse semicolon-separated key=value pairs
+            /// </summary>
+            /// <param name="cmd">A string semicolon-separated key=value pairs</param>
+            /// <returns>A dictionary with key value pairs</returns>
+            private Dictionary<string, string> ProcessCmd(string cmd)
         {
             cmd = cmd.TrimEnd(';');
 

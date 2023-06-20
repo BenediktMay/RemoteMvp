@@ -47,6 +47,12 @@ namespace RemoteMvpClient
             await ProcessRequest(loginRequest);
         }
 
+        private async void OnDeleteRequested(object? sender, Tuple<string, string> e)
+        {
+            RemoteActionRequest deleteRequest = new RemoteActionRequest(ActionType.Delete, e.Item1, e.Item2);
+            await ProcessRequest(deleteRequest);
+        }
+
         /// <summary>
         /// Collect and process all UI events
         /// </summary>
@@ -71,6 +77,9 @@ namespace RemoteMvpClient
                             _clientView.RegisterOk(response.Message);
                             break;
                         case ActionType.Login:
+                            _clientView.LoginOk(response.Message);
+                            break;
+                        case ActionType.Delete: //DOTO change from loginok to delteok
                             _clientView.LoginOk(response.Message);
                             break;
                     }

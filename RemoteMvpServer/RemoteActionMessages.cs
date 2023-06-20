@@ -6,7 +6,14 @@ namespace RemoteMvpLib
     {
         Register,
         Login,
-        Logout
+        Logout,
+        Delete
+    }
+
+    public enum UserType
+    {
+        User,
+        Admin
     }
 
     public class RemoteActionRequest
@@ -16,6 +23,8 @@ namespace RemoteMvpLib
         public string UserName { get; }
 
         public string Password { get; }
+
+        public UserType UserType { get; }
 
         public RemoteActionRequest(ActionType type, string username, string password)
         {

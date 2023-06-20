@@ -85,7 +85,7 @@ namespace RemoteMvpLib
 
         private static string Serialize(RemoteActionRequest request)
         {
-            return string.Format("{0};{1};{2}", request.Type.ToString(), request.UserName, request.Password);
+            return string.Format("{0};{1};{2};{3}", request.Type.ToString(), request.UserName, request.Password,request.UserType.ToString());
         }
 
         private static RemoteActionResponse Deserialize(string response)
