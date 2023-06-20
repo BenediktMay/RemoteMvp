@@ -47,12 +47,7 @@ namespace RemoteMvpClient
             await ProcessRequest(loginRequest);
         }
 
-        private async void OnDeleteRequested(object? sender, Tuple<string, string> e)
-        {
-            RemoteActionRequest deleteRequest = new RemoteActionRequest(ActionType.Delete, e.Item1, e.Item2,U);
-            await ProcessRequest(deleteRequest);
-        }
-
+  
         /// <summary>
         /// Collect and process all UI events
         /// </summary>
