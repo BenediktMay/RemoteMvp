@@ -59,7 +59,7 @@ namespace RemoteMvpLib
                     byte[] bytes = new byte[1024];
 
                     Console.WriteLine("Remote client connected! Waiting for data ...");
-                    int bytesRec = await Handler.ReceiveAsync(bytes);
+                    int bytesRec = await Handler.ReceiveAsync(bytes, SocketFlags.None);
 
                     string requestString = Encoding.ASCII.GetString(bytes, 0, bytesRec);
                     Console.WriteLine("Text received : {0}", requestString);

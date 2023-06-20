@@ -47,11 +47,11 @@ namespace RemoteMvpLib
                 var msg = Encoding.ASCII.GetBytes(message);
 
                 // Send the data through the socket asynchronously.
-                var bytesSent = await sender.SendAsync(msg);
+                var bytesSent = await sender.SendAsync(msg, SocketFlags.None);
                 Console.WriteLine($"{bytesSent} bytes sent to server. Waiting for response ...");
 
                 // Receive the response from the remote device asynchronously
-                var bytesRec = await sender.ReceiveAsync(buffer);
+                var bytesRec = await sender.ReceiveAsync(buffer, SocketFlags.None);
                 var responseString = Encoding.ASCII.GetString(buffer, 0, bytesRec);
                 Console.WriteLine($"Received {bytesRec} bytes: {responseString}");
 
