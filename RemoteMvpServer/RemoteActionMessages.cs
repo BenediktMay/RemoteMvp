@@ -7,7 +7,8 @@ namespace RemoteMvpLib
         Register,
         Login,
         Logout,
-        Delete
+        Delete,
+        RequestList
     }
 
     public enum UserType

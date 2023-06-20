@@ -51,6 +51,10 @@ namespace RemoteMvpApp
                     }
                     else throw new NotImplementedException();//TODO SEND ERROR MESSAGE
                     break;
+                case ActionType.RequestList:
+                    SentUserList();
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException("Request not supported");
             }
@@ -98,6 +102,29 @@ namespace RemoteMvpApp
         {
             _users.RemoveUser(username);
             handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, "User was deleted (probably fails silent ;) )"));
+        }
+
+        private void SentUserList()
+        {
+            List<string> stringUserList = new List<string>();
+            stringUserList=_users.UserToStringList();
+            string responseString;
+
+            //foreach (var user in stringUserList)
+            //{
+            //    responseString = Serialize(response);
+
+
+            //    stringUserList.Add(user.UserName + ";" + user.Password);
+            //}
+
+            //string responseString = Serialize(response);
+            //byte[] msg = Encoding.ASCII.GetBytes(responseString);
+            //handler.Send(msg);
+            //handler.Shutdown(SocketShutdown.Both);
+            //handler.Close();
+
+
         }
 
 

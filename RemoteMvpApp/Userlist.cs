@@ -71,6 +71,18 @@ namespace RemoteMvpApp
             }
         }
 
+        public List<string>UserToStringList()
+        {
+            List<string> stringUserList = new List<string>();
+
+            foreach (var user in _users)
+            {
+                stringUserList.Add(user.UserName + ";" + user.Password);
+            }
+
+            return stringUserList;
+        }
+
         public void RemoveUser(string username)
         {
             _users.RemoveAll(user => user.UserName.Equals(username));
