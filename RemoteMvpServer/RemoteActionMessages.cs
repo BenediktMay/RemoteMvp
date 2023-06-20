@@ -26,11 +26,12 @@ namespace RemoteMvpLib
 
         public UserType UserType { get; }
 
-        public RemoteActionRequest(ActionType type, string username, string password)
+        public RemoteActionRequest(ActionType type, string username, string password, UserType userType)
         {
             Type = type;
             UserName = username;
             Password = password;
+            UserType = userType;
         }
     }
 
