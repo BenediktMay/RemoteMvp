@@ -1,3 +1,5 @@
+using RemoteMvpLib;
+
 namespace RemoteMVPAdmin
 {
     internal static class Program
@@ -11,7 +13,9 @@ namespace RemoteMVPAdmin
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new AdminView());
+            var admin = new RemoteActionAdapter("localhost", 11000);
+            var adminController = new AdminPresenter(admin);
+            adminController.OpenUI(true);
         }
     }
 }
