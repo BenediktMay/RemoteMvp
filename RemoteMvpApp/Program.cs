@@ -25,5 +25,5 @@ var adminController = new AdminPresenter(admin);
 adminController.OpenUI(true);
 
 
-//serverTask.Wait();
+serverTask.Wait();
 

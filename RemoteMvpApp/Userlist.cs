@@ -26,6 +26,10 @@ namespace RemoteMvpApp
         public Userlist()
         {
             _users = new List<User>();
+            for (int i = 0; i < 10; i++)
+            {
+                _users.Add(new User("Test"+i, "Test"));
+            }
         }
 
         public UserListActionResult LoginUser(string username, string password)
