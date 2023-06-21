@@ -32,10 +32,10 @@ namespace RemoteMVPAdmin
 
         }
 
-        private async void OnDeleteRequested(object? sender, Tuple<string, string> e)
+        private async void OnDeleteRequested(object? sender, int e)
         {
-            RemoteActionRequest deleteRequest = new RemoteActionRequest(ActionType.Delete, e.Item1, e.Item2, UserType.Admin);
-            await ProcessRequest(deleteRequest);
+            //RemoteActionRequest deleteRequest = new RemoteActionRequest(ActionType.Delete, e.Item1, e.Item2, UserType.Admin);
+            //await ProcessRequest(deleteRequest);
         }
 
 

@@ -52,7 +52,7 @@ namespace RemoteMvpApp
                     else throw new NotImplementedException();//TODO SEND ERROR MESSAGE
                     break;
                 case ActionType.RequestList:
-                    SentUserList();
+                    SentUserList(handler);
                     break;
 
                 default:
