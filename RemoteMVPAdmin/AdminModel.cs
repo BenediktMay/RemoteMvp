@@ -6,10 +6,22 @@ using System.Threading.Tasks;
 
 namespace RemoteMVPAdmin
 {
+    public class User
+    {
+        public string Name { get; private set; }
+        public string Password { get; private set; }
+
+        public User(string name, string password)
+        {
+            Name = name;
+            Password = password;
+        }
+    }
+
+
     public class AdminModel
     {
-        private record User(string UserName, string Password);
-        private List<User> _users { get; }
+        public List<User> _users;
 
         public AdminModel()
         {
@@ -25,7 +37,7 @@ namespace RemoteMVPAdmin
         {
             _users.Clear();
         }
-
+    
 
 
     }
