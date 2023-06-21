@@ -101,18 +101,19 @@ namespace RemoteMvpApp
         private void Process_Delete(RemoteActionEndpoint handler, string username, string password)
         {
             _users.RemoveUser(username);
-            handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, "User was deleted (probably fails silent ;) )"));
+            handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, "User was deleted (probably fails silently ;) )"));
         }
 
-        private void SentUserList()
+        private void SentUserList(RemoteActionEndpoint handler)
         {
             List<string> stringUserList = new List<string>();
             stringUserList=_users.UserToStringList();
             string responseString;
 
-            //foreach (var user in stringUserList)
-            //{
-            //    responseString = Serialize(response);
+            foreach (var user in stringUserList)
+            {
+                handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, user));
+            }
 
 
             //    stringUserList.Add(user.UserName + ";" + user.Password);
