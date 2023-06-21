@@ -85,13 +85,21 @@ namespace RemoteMvpLib
 
         private static string Serialize(RemoteActionRequest request)
         {
-            return string.Format("{0};{1};{2};{3}", request.Type.ToString(), request.UserName, request.Password,request.UserType.ToString());
+            return string.Format("{0};{1};{2};{3}", request.Type.ToString(), request.UserName, request.Password, request.UserType.ToString());
         }
 
         private static RemoteActionResponse Deserialize(string response)
         {
             string[] parts = response.Split(';');
-            RemoteActionResponse res = new RemoteActionResponse(Enum.Parse<ResponseType>(parts[0]), parts[1]);
+            string message = string.Empty;
+
+            for (int i = 1; i < parts.Length; i++)
+            {
+                message += parts[i];
+                if (i < parts.Length - 1) message += ";";
+            }
+
+            RemoteActionResponse res = new RemoteActionResponse(Enum.Parse<ResponseType>(parts[0]), message);
             return res;
         }
     }
