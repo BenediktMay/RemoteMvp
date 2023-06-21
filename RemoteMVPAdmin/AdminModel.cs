@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace RemoteMVPAdmin
 {
-    internal class AdminModel
+    public class AdminModel
     {
-        public List<Tuple<string, string>> _users;
+        private record User(string UserName, string Password);
+        private List<User> _users { get; }
 
         public AdminModel()
         {
-            _users = new List<Tuple<string, string>>();
+            _users = new List<User>();
         }
 
-        public void AddToList(string user)
+        public void AddToList(string user, string password)
         {
-            var parts = user.Split(';');
-            _users.Add(Tuple.Create(parts[0], parts[1]));
+            _users.Add(new User(user, password));
         }
 
         public void ClearList()

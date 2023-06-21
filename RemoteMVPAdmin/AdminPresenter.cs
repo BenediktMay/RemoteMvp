@@ -1,21 +1,25 @@
-﻿using RemoteMvpLib;
+﻿using Microsoft.VisualBasic.ApplicationServices;
+using RemoteMvpLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RemoteMVPAdmin
 {
     public class AdminPresenter
     {
         private readonly AdminView _adminView;
+        private readonly AdminModel _adminModel;
         private readonly IActionAdapter _adapter;
 
         public AdminPresenter(IActionAdapter adapter)
         {
             _adapter = adapter;
             _adminView = new AdminView();
+            _adminModel = new AdminModel();
             _adminView.DeleteRequested += OnDeleteRequested;
         }
 
@@ -32,10 +36,21 @@ namespace RemoteMVPAdmin
 
         }
 
-        private async void OnDeleteRequested(object? sender, int e)
+        private async void OnDeleteRequested(object? sender, int indices)
         {
-            //RemoteActionRequest deleteRequest = new RemoteActionRequest(ActionType.Delete, e.Item1, e.Item2, UserType.Admin);
-            //await ProcessRequest(deleteRequest);
+            var user = _adminModel._users[indices];
+
+            RemoteActionRequest deleteRequest = new RemoteActionRequest(ActionType.Delete, user.Item1, user.Item2, UserType.Admin);
+            await ProcessRequest(deleteRequest);
+
+            
+        }
+
+        private async void UpdateModel()
+        {
+            RemoteActionRequest getList = new RemoteActionRequest(ActionType.RequestList,"","",UserType.Admin);
+            await ProcessRequest(getList);
+        
         }
 
 
@@ -52,26 +67,42 @@ namespace RemoteMVPAdmin
 
             // Process result
 
-            //switch (response.Type)
-            //{
-            //    case ResponseType.Error:
-            //        _clientView.ShowErrorMessage(response.Message);
-            //        break;
-            //    case ResponseType.Success:
-            //        switch (request.Type)
-            //        {
-            //            case ActionType.Register:
-            //                _clientView.RegisterOk(response.Message);
-            //                break;
-            //            case ActionType.Login:
-            //                _clientView.LoginOk(response.Message);
-            //                break;
-            //            case ActionType.Delete: //DOTO change from loginok to delteok
-            //                _clientView.LoginOk(response.Message);
-            //                break;
-            //        }
-            //        break;
-            //}
+            switch (response.Type)
+            {
+                case ResponseType.Error:
+                    _adminView.ShowErrorMessage(response.Message);
+                    break;
+                case ResponseType.Success:
+                    switch (request.Type)
+                    {
+                        case ActionType.Delete:
+
+                            _adminView.DeletedOK(response.Message);
+
+                            break;
+
+                        case ActionType.RequestList:
+
+                            var parts = response.Message.Split(';');
+                            User user = new User(parts[0], parts[1]);   
+
+                            if (_adminModel._users.Contains(user))
+                            {
+
+                            }
+
+                            _adminModel.AddToList(parts[0], parts[1]);
+                            //response String (PreName;LastName)
+
+                            break;
+                    }
+
+
+
+                    break;
+            }
+
         }
+
     }
 }

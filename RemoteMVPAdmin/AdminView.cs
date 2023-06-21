@@ -18,5 +18,15 @@ namespace RemoteMVPAdmin
         {
 
         }
+
+        public void ShowErrorMessage(string message)
+        {
+            MessageBox.Show(message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        public void DeletedOK(string text)
+        {
+            MessageBox.Show(text, "User Deleted", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+        }
     }
 }
