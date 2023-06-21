@@ -11,8 +11,8 @@ namespace RemoteMVPAdmin
 {
     public class AdminPresenter
     {
-        private readonly AdminView _adminView;
-        private readonly AdminModel _adminModel;
+        private AdminView _adminView;
+        private AdminModel _adminModel;
         private readonly IActionAdapter _adapter;
 
         public AdminPresenter(IActionAdapter adapter)
@@ -20,7 +20,14 @@ namespace RemoteMVPAdmin
             _adapter = adapter;
             _adminView = new AdminView();
             _adminModel = new AdminModel();
+            UpdateModel();
             _adminView.DeleteRequested += OnDeleteRequested;
+            _adminModel.ModelChanged += OnModelChanged;
+        }
+
+        private void OnModelChanged(object? sender, EventArgs e)
+        {
+            _adminView.UpdateView(_adminModel._users);
         }
 
         public void OpenUI(bool isModal)
@@ -40,7 +47,7 @@ namespace RemoteMVPAdmin
         {
             var user = _adminModel._users[indices];
 
-            RemoteActionRequest deleteRequest = new RemoteActionRequest(ActionType.Delete, user.Item1, user.Item2, UserType.Admin);
+            RemoteActionRequest deleteRequest = new RemoteActionRequest(ActionType.Delete, user.Name, user.Password, UserType.Admin);
             await ProcessRequest(deleteRequest);
 
             
@@ -48,6 +55,7 @@ namespace RemoteMVPAdmin
 
         private async void UpdateModel()
         {
+
             RemoteActionRequest getList = new RemoteActionRequest(ActionType.RequestList,"","",UserType.Admin);
             await ProcessRequest(getList);
         
@@ -86,13 +94,11 @@ namespace RemoteMVPAdmin
                             var parts = response.Message.Split(';');
                             User user = new User(parts[0], parts[1]);   
 
-                            if (_adminModel._users.Contains(user))
+                            if (!_adminModel._users.Contains(user))
                             {
-
+                                _adminModel.AddToList(parts[0], parts[1]);
                             }
 
-                            _adminModel.AddToList(parts[0], parts[1]);
-                            //response String (PreName;LastName)
 
                             break;
                     }

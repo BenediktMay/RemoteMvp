@@ -14,9 +14,18 @@ namespace RemoteMVPAdmin
             DeleteRequested?.Invoke(this, listViewUser.SelectedIndices[0]);
         }
 
-        public void UpdateView(List<string> users)
+        public void UpdateView(List<User> users)
         {
+            listViewUser.Items.Clear();
 
+            foreach (User user in users)
+            {  
+                ListViewItem item = new ListViewItem(new string[] {user.Name,user.Password});
+
+                listViewUser.Items.Add(item);
+            }
+
+            listViewUser.Update();
         }
 
         public void ShowErrorMessage(string message)

@@ -21,6 +21,8 @@ namespace RemoteMVPAdmin
 
     public class AdminModel
     {
+        public event EventHandler ModelChanged;
+
         public List<User> _users;
 
         public AdminModel()
@@ -31,11 +33,13 @@ namespace RemoteMVPAdmin
         public void AddToList(string user, string password)
         {
             _users.Add(new User(user, password));
+            ModelChanged?.Invoke(this, EventArgs.Empty);    
         }
 
         public void ClearList()
         {
             _users.Clear();
+            ModelChanged?.Invoke(this, EventArgs.Empty);
         }
     
 
