@@ -28,12 +28,61 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            listViewUser = new ListView();
+            columnName = new ColumnHeader();
+            columnPassword = new ColumnHeader();
+            btnDelete = new Button();
+            SuspendLayout();
+            // 
+            // listViewUser
+            // 
+            listViewUser.Columns.AddRange(new ColumnHeader[] { columnName, columnPassword });
+            listViewUser.FullRowSelect = true;
+            listViewUser.Location = new Point(12, 12);
+            listViewUser.MultiSelect = false;
+            listViewUser.Name = "listViewUser";
+            listViewUser.Size = new Size(967, 439);
+            listViewUser.TabIndex = 0;
+            listViewUser.UseCompatibleStateImageBehavior = false;
+            listViewUser.View = View.Details;
+            // 
+            // columnName
+            // 
+            columnName.Text = "Name";
+            columnName.Width = 300;
+            // 
+            // columnPassword
+            // 
+            columnPassword.Text = "Password";
+            columnPassword.Width = 300;
+            // 
+            // btnDelete
+            // 
+            btnDelete.Location = new Point(985, 12);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(273, 439);
+            btnDelete.TabIndex = 1;
+            btnDelete.Text = "Delete";
+            btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.Click += btnDelete_Click;
+            // 
+            // AdminView
+            // 
+            AutoScaleDimensions = new SizeF(13F, 32F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1270, 463);
+            Controls.Add(btnDelete);
+            Controls.Add(listViewUser);
+            Name = "AdminView";
+            Text = "Admin";
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private ListView listViewUser;
+        private ColumnHeader columnName;
+        private ColumnHeader columnPassword;
+        private Button btnDelete;
     }
 }
