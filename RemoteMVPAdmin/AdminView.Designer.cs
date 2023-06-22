@@ -41,7 +41,7 @@
             listViewUser.Location = new Point(12, 12);
             listViewUser.MultiSelect = false;
             listViewUser.Name = "listViewUser";
-            listViewUser.Size = new Size(967, 439);
+            listViewUser.Size = new Size(711, 439);
             listViewUser.TabIndex = 0;
             listViewUser.UseCompatibleStateImageBehavior = false;
             listViewUser.View = View.Details;
@@ -58,9 +58,9 @@
             // 
             // btnDelete
             // 
-            btnDelete.Location = new Point(985, 12);
+            btnDelete.Location = new Point(729, 12);
             btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(273, 439);
+            btnDelete.Size = new Size(166, 439);
             btnDelete.TabIndex = 1;
             btnDelete.Text = "Delete";
             btnDelete.UseVisualStyleBackColor = true;
@@ -70,9 +70,13 @@
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1270, 463);
+            ClientSize = new Size(907, 463);
             Controls.Add(btnDelete);
             Controls.Add(listViewUser);
+            MaximizeBox = false;
+            MaximumSize = new Size(933, 534);
+            MinimizeBox = false;
+            MinimumSize = new Size(933, 534);
             Name = "AdminView";
             Text = "Admin";
             ResumeLayout(false);

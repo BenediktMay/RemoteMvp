@@ -20,7 +20,14 @@ namespace RemoteMVPAdmin
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            DeleteRequested?.Invoke(this, listViewUser.SelectedIndices[0]);
+            try
+            {
+                DeleteRequested?.Invoke(this, listViewUser.SelectedIndices[0]);
+            }
+            catch (Exception)
+            {
+                DeletedNotOK();
+            }  
         }
 
         #endregion
@@ -49,6 +56,11 @@ namespace RemoteMVPAdmin
         public void DeletedOK(string text)
         {
             MessageBox.Show(text, "User Deleted", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+        }
+
+        public void DeletedNotOK()
+        {
+            MessageBox.Show("Please Select the user you want to Delete!", "No User Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         #endregion
