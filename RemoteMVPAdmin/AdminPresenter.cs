@@ -11,6 +11,8 @@ namespace RemoteMVPAdmin
 {
     public class AdminPresenter
     {
+        private event EventHandler UserDeleted;
+
         private AdminView _adminView;
         private AdminModel _adminModel;
         private readonly IActionAdapter _adapter;
@@ -23,6 +25,12 @@ namespace RemoteMVPAdmin
             UpdateModel();
             _adminView.DeleteRequested += OnDeleteRequested;
             _adminModel.ModelChanged += OnModelChanged;
+            this.UserDeleted += OnUserDeleted;
+        }
+
+        private void OnUserDeleted(object? sender, EventArgs e)
+        {
+            UpdateModel();
         }
 
         private void OnModelChanged(object? sender, EventArgs e)
@@ -50,15 +58,14 @@ namespace RemoteMVPAdmin
             RemoteActionRequest deleteRequest = new RemoteActionRequest(ActionType.Delete, user.Name, user.Password, UserType.Admin);
             await ProcessRequest(deleteRequest);
 
-            
         }
 
         private async void UpdateModel()
         {
 
-            RemoteActionRequest getList = new RemoteActionRequest(ActionType.RequestList,"","",UserType.Admin);
+            RemoteActionRequest getList = new RemoteActionRequest(ActionType.RequestList, "", "", UserType.Admin);
             await ProcessRequest(getList);
-        
+
         }
 
 
@@ -86,19 +93,25 @@ namespace RemoteMVPAdmin
                         case ActionType.Delete:
 
                             _adminView.DeletedOK(response.Message);
+                            UserDeleted?.Invoke(this, EventArgs.Empty);
 
                             break;
 
                         case ActionType.RequestList:
 
-                            var parts = response.Message.Split(';');
-                            User user = new User(parts[0], parts[1]);   
+                            _adminModel._users.Clear();
 
-                            if (!_adminModel._users.Contains(user))
+                            var lines = response.Message.Split('\n');
+
+                            foreach (var line in lines)
                             {
-                                _adminModel.AddToList(parts[0], parts[1]);
+                                var parts = line.Split(';');
+                                User user = new User(parts[0], parts[1]);
+                                if (!_adminModel._users.Contains(user))
+                                {
+                                    _adminModel.AddToList(parts[0], parts[1]);
+                                }
                             }
-
 
                             break;
                     }

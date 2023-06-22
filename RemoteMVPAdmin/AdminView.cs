@@ -19,8 +19,8 @@ namespace RemoteMVPAdmin
             listViewUser.Items.Clear();
 
             foreach (User user in users)
-            {  
-                ListViewItem item = new ListViewItem(new string[] {user.Name,user.Password});
+            {
+                ListViewItem item = new ListViewItem(new string[] { user.Name, user.Password });
 
                 listViewUser.Items.Add(item);
             }

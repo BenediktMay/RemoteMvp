@@ -108,12 +108,15 @@ namespace RemoteMvpApp
         {
             List<string> stringUserList = new List<string>();
             stringUserList=_users.UserToStringList();
-            string responseString;
+            string responseString = string.Empty;
 
-            foreach (var user in stringUserList)
+            for (int i = 0; i < stringUserList.Count; i++)
             {
-                handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, user));
+                responseString += stringUserList[i];
+                if (stringUserList.Count-1 > i ) responseString += "\n";
+
             }
+            handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, responseString));
 
 
             //    stringUserList.Add(user.UserName + ";" + user.Password);
@@ -129,12 +132,12 @@ namespace RemoteMvpApp
         }
 
 
-            /// <summary>
-            /// Helper method to parse semicolon-separated key=value pairs
-            /// </summary>
-            /// <param name="cmd">A string semicolon-separated key=value pairs</param>
-            /// <returns>A dictionary with key value pairs</returns>
-            private Dictionary<string, string> ProcessCmd(string cmd)
+        /// <summary>
+        /// Helper method to parse semicolon-separated key=value pairs
+        /// </summary>
+        /// <param name="cmd">A string semicolon-separated key=value pairs</param>
+        /// <returns>A dictionary with key value pairs</returns>
+        private Dictionary<string, string> ProcessCmd(string cmd)
         {
             cmd = cmd.TrimEnd(';');
 

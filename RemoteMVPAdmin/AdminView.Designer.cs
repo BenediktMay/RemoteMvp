@@ -49,12 +49,12 @@
             // columnName
             // 
             columnName.Text = "Name";
-            columnName.Width = 300;
+            columnName.Width = 150;
             // 
             // columnPassword
             // 
             columnPassword.Text = "Password";
-            columnPassword.Width = 300;
+            columnPassword.Width = 150;
             // 
             // btnDelete
             // 
