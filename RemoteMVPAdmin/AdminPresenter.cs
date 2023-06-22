@@ -11,12 +11,20 @@ namespace RemoteMVPAdmin
 {
     public class AdminPresenter
     {
+        #region Declaration
+
         private event EventHandler UserDeleted;
 
         private AdminView _adminView;
         private AdminModel _adminModel;
         private readonly IActionAdapter _adapter;
 
+        #endregion
+
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="adapter"></param>
         public AdminPresenter(IActionAdapter adapter)
         {
             _adapter = adapter;
@@ -28,6 +36,8 @@ namespace RemoteMVPAdmin
             this.UserDeleted += OnUserDeleted;
         }
 
+        #region Events
+
         private void OnUserDeleted(object? sender, EventArgs e)
         {
             UpdateModel();
@@ -38,6 +48,34 @@ namespace RemoteMVPAdmin
             _adminView.UpdateView(_adminModel._users);
         }
 
+        private async void OnDeleteRequested(object? sender, int indices)
+        {
+            var user = _adminModel._users[indices];
+
+            RemoteActionRequest deleteRequest = new RemoteActionRequest(ActionType.Delete, user.Name, user.Password, UserType.Admin);
+            await ProcessRequest(deleteRequest);
+
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get new userlist and update Model
+        /// </summary>
+        private async void UpdateModel()
+        {
+
+            RemoteActionRequest getList = new RemoteActionRequest(ActionType.RequestList, "", "", UserType.Admin);
+            await ProcessRequest(getList);
+
+        }
+
+        /// <summary>
+        /// Open UI
+        /// </summary>
+        /// <param name="isModal"></param>
         public void OpenUI(bool isModal)
         {
             if (isModal)
@@ -50,25 +88,6 @@ namespace RemoteMVPAdmin
             }
 
         }
-
-        private async void OnDeleteRequested(object? sender, int indices)
-        {
-            var user = _adminModel._users[indices];
-
-            RemoteActionRequest deleteRequest = new RemoteActionRequest(ActionType.Delete, user.Name, user.Password, UserType.Admin);
-            await ProcessRequest(deleteRequest);
-
-        }
-
-        private async void UpdateModel()
-        {
-
-            RemoteActionRequest getList = new RemoteActionRequest(ActionType.RequestList, "", "", UserType.Admin);
-            await ProcessRequest(getList);
-
-        }
-
-
 
         /// <summary>
         /// Collect and process all UI events
@@ -122,6 +141,8 @@ namespace RemoteMVPAdmin
             }
 
         }
+
+        #endregion
 
     }
 }
