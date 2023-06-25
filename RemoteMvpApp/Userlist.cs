@@ -23,9 +23,14 @@ namespace RemoteMvpApp
         private record User(string UserName, string Password);
         private readonly List<User> _users;
 
+        public event EventHandler ModelChanged;
+
+
         public Userlist()
         {
             _users = new List<User>();
+
+            ModelChanged += OnModelChanged;
 
             //Test users
             for (int i = 1; i < 20; i++)
@@ -33,6 +38,11 @@ namespace RemoteMvpApp
                 _users.Add(new User("Test "+i, "PW "+i));
             }
 
+        }
+
+        private void OnModelChanged(object? sender, EventArgs e)
+        {
+            SaveUserToCSV(_users);
         }
 
         public UserListActionResult LoginUser(string username, string password)
@@ -62,7 +72,7 @@ namespace RemoteMvpApp
             User newUser = new(username, password);
             _users.Add(newUser);
 
-            SaveUserToCSV(_users);
+            ModelChanged?.Invoke(this, EventArgs.Empty);
 
             return UserListActionResult.RegistrationOk;
         }
@@ -93,11 +103,13 @@ namespace RemoteMvpApp
         public void RemoveUser(string username)
         {
             _users.RemoveAll(user => user.UserName.Equals(username));
+            ModelChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void RemoveAllUsers()
         {
             _users.Clear();
+            ModelChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

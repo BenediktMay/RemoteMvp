@@ -99,12 +99,21 @@ namespace RemoteMvpApp
             }
         }
 
+        /// <summary>
+        /// call the model method to delete the user
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         private void Process_Delete(RemoteActionEndpoint handler, string username, string password)
         {
             _users.RemoveUser(username);
             handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, "User was deleted (probably fails silently ;) )"));
         }
-
+        /// <summary>
+        /// Method that reorders users string and call the PerformActionResponse method
+        /// </summary>
+        /// <param name="handler"></param>
         private void SentUserList(RemoteActionEndpoint handler)
         {
             List<string> stringUserList = new List<string>();
@@ -118,18 +127,6 @@ namespace RemoteMvpApp
 
             }
             handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, responseString));
-
-
-            //    stringUserList.Add(user.UserName + ";" + user.Password);
-            //}
-
-            //string responseString = Serialize(response);
-            //byte[] msg = Encoding.ASCII.GetBytes(responseString);
-            //handler.Send(msg);
-            //handler.Shutdown(SocketShutdown.Both);
-            //handler.Close();
-
-
         }
 
 
