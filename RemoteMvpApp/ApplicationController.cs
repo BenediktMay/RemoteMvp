@@ -1,4 +1,5 @@
 ﻿using RemoteMvpLib;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace RemoteMvpApp
 {
@@ -49,7 +50,7 @@ namespace RemoteMvpApp
                     {
                         Process_Delete(handler, request.UserName, request.Password);
                     }
-                    else throw new NotImplementedException();//TODO SEND ERROR MESSAGE
+                    else handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Error, $"Delete user failed"));
                     break;
                 case ActionType.RequestList:
                     SentUserList(handler);
