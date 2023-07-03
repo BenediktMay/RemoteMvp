@@ -87,14 +87,23 @@ namespace RemoteMvpApp
 
         private void SaveUserToCSV(List<User> users)
         {
-            using (var file = File.CreateText(Path.Combine(Environment.CurrentDirectory, CSVFilename)))
+
+            try
+            {
+                using (var file = File.CreateText(Path.Combine(Environment.CurrentDirectory, CSVFilename)))
             {
                 foreach (var user in users)
                 {
                     file.WriteLine(user.UserName+";"+ user.Password);
                 }
             }
-        }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while write the file: " + e.Message);
+            }
+}
 
         private List<User> LoadUsersFromCSV()
         {
