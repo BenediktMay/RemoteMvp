@@ -19,6 +19,8 @@ namespace RemoteMVPAdmin
         private AdminModel _adminModel;
         private readonly IActionAdapter _adapter;
 
+        private bool _allUsersRecieved = false;
+
         #endregion
 
         /// <summary>
@@ -66,10 +68,11 @@ namespace RemoteMVPAdmin
         /// </summary>
         private async void UpdateModel()
         {
-
-            RemoteActionRequest getList = new RemoteActionRequest(ActionType.RequestList, "", "", UserType.Admin);
-            await ProcessRequest(getList);
-
+            do
+            {
+                RemoteActionRequest getList = new RemoteActionRequest(ActionType.RequestList, "", "", UserType.Admin);
+                await ProcessRequest(getList);
+            } while (!_allUsersRecieved);
         }
 
         /// <summary>
@@ -118,18 +121,13 @@ namespace RemoteMVPAdmin
 
                         case ActionType.RequestList:
 
-                            _adminModel._users.Clear();
-
-                            var lines = response.Message.Split('\n');
-
-                            foreach (var line in lines)
+                            try
                             {
-                                var parts = line.Split(';');
-                                User user = new User(parts[0], parts[1]);
-                                if (!_adminModel._users.Contains(user))
-                                {
-                                    _adminModel.AddToList(parts[0], parts[1]);
-                                }
+                                CollectUsers(response.Message);
+                            }
+                            catch (Exception e)
+                            {
+                                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
 
                             break;
@@ -142,6 +140,51 @@ namespace RemoteMVPAdmin
 
         }
 
+        /// <summary>
+        /// Adds a Section of all users to the Model
+        /// return false: not all users transmitted
+        /// return true: all users tranmitted
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        private bool CollectUsers(string response)
+        {
+            _adminModel._users.Clear();
+
+            var lines = response.Split('\n');
+            UserIteration(lines);
+
+            if (lines[0] == "0")
+            {
+                _allUsersRecieved = false;
+                return false;
+            }
+            else if (lines[0] == "1")
+            {
+                _allUsersRecieved = true;
+                return true;
+            }
+            else throw new Exception("MSB missing");
+
+        }
+
+        /// <summary>
+        /// Iteration to add new users to the model
+        /// </summary>
+        /// <param name="lines"></param>
+        private void UserIteration(string[] lines)
+        {
+            for (int i = 1; i < lines.Length; i++)
+            {
+                var parts = lines[i].Split(';');
+                User user = new User(parts[0], parts[1]);
+                if (!_adminModel._users.Contains(user))
+                {
+                    _adminModel.AddToList(parts[0], parts[1]);
+                }
+            }
+        }
         #endregion
 
     }
