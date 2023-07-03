@@ -38,11 +38,11 @@ namespace RemoteMvpApp
 
             _users=LoadUsersFromCSV();
 
-            //Test users
-            //for (int i = 1; i < 20; i++)
-            //{
-            //    _users.Add(new User("Test "+i, "PW "+i));
-            //}
+            //Test users no validation
+            for (int i = 1; i < 20; i++)
+            {
+                _users.Add(new User("Test " + i, "PW " + i));
+            }
 
 
 
@@ -99,7 +99,7 @@ namespace RemoteMvpApp
         private List<User> LoadUsersFromCSV()
         {
 
-            List<User> CSVusers=null; //Null returned if list empty
+            List<User> CSVusers= new List<User>();
 
             try
             {
@@ -109,7 +109,7 @@ namespace RemoteMvpApp
                     while (!sr.EndOfStream)
                     {
                         line = sr.ReadLine();
-                        var splitString = line.Split(',');
+                        var splitString = line.Split(';');
                         CSVusers.Add(new User(splitString[0], splitString[1]));
                     }
                 }
