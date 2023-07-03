@@ -22,6 +22,8 @@ namespace RemoteMvpApp
 
     internal class Userlist
     {
+        #region Declaration
+
         private record User(string UserName, string Password);
         private readonly List<User> _users;
 
@@ -29,7 +31,11 @@ namespace RemoteMvpApp
 
         public event EventHandler ModelChanged;
 
+        #endregion
 
+        /// <summary>
+        /// ctor
+        /// </summary>
         public Userlist()
         {
             _users = new List<User>();
@@ -43,11 +49,24 @@ namespace RemoteMvpApp
 
         }
 
+        #region Events
+
         private void OnModelChanged(object? sender, EventArgs e)
         {
             SaveUserToCSV(_users);
         }
 
+        #endregion
+
+
+        #region Methods
+
+        /// <summary>
+        /// login user
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public UserListActionResult LoginUser(string username, string password)
         {
             foreach (var user in _users.Where(user => user.UserName.Equals(username)))
@@ -65,6 +84,12 @@ namespace RemoteMvpApp
             return UserListActionResult.UserNotExisting;
         }
 
+        /// <summary>
+        /// register user
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public UserListActionResult RegisterUser(string username, string password)
         {
             if (_users.Any(user => user.UserName.Equals(username)))
@@ -80,6 +105,10 @@ namespace RemoteMvpApp
             return UserListActionResult.RegistrationOk;
         }
 
+        /// <summary>
+        /// save users as csv
+        /// </summary>
+        /// <param name="users"></param>
         private void SaveUserToCSV(List<User> users)
         {
 
@@ -100,6 +129,9 @@ namespace RemoteMvpApp
             }
         }
 
+        /// <summary>
+        /// load users from csv 
+        /// </summary>
         private void LoadUsersFromCSV()
         {
             List<User> CSVusers = new List<User>();
@@ -131,6 +163,11 @@ namespace RemoteMvpApp
 
         }
 
+        /// <summary>
+        /// convert userlist to stringlist
+        /// delimiter = ;
+        /// </summary>
+        /// <returns></returns>
         public List<string> UserToStringList()
         {
             List<string> stringUserList = new List<string>();
@@ -143,16 +180,26 @@ namespace RemoteMvpApp
             return stringUserList;
         }
 
+        /// <summary>
+        /// remove user defined by username
+        /// </summary>
+        /// <param name="username"></param>
         public void RemoveUser(string username)
         {
             _users.RemoveAll(user => user.UserName.Equals(username));
             ModelChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// remove all users
+        /// </summary>
         public void RemoveAllUsers()
         {
             _users.Clear();
+            _users.Add(new User("Admin", "*********"));
             ModelChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        #endregion
     }
 }
