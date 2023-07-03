@@ -111,9 +111,17 @@ namespace RemoteMvpApp
         /// <param name="password"></param>
         private void Process_Delete(RemoteActionEndpoint handler, string username, string password)
         {
-            _users.RemoveUser(username);
-            handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, "User was deleted (probably fails silently ;) )"));
+            if (username == "Admin")
+            {
+                handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Error, "User: Admin can not be deleted!"));
+            }
+            else
+            {
+                _users.RemoveUser(username);
+                handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, "User was deleted (probably fails silently ;) )"));
+            }
         }
+
         /// <summary>
         /// Method that reorders users string and call the PerformActionResponse method
         /// </summary>
@@ -138,7 +146,7 @@ namespace RemoteMvpApp
                 for (int i = (_sendIndex - 1) * 10; i < _sendIndex * 10; i++)
                 {
                     responseString += stringUserList[i];
-                    if (i+1 < _sendIndex * 10) responseString += "\n";
+                    if (i + 1 < _sendIndex * 10) responseString += "\n";
                 }
                 _sendIndex++;
             }
@@ -149,7 +157,7 @@ namespace RemoteMvpApp
                 for (int i = (_sendIndex - 1) * 10; i < stringUserList.Count; i++)
                 {
                     responseString += stringUserList[i];
-                    if (i < stringUserList.Count-1) responseString += "\n";
+                    if (i < stringUserList.Count - 1) responseString += "\n";
                 }
                 _sendIndex = 1;
                 _sendBlocksCount = 0;

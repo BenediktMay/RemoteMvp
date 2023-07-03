@@ -25,7 +25,7 @@ namespace RemoteMvpApp
         private record User(string UserName, string Password);
         private readonly List<User> _users;
 
-        private string CSVFilename="users.csv";
+        private string CSVFilename = "users.csv";
 
         public event EventHandler ModelChanged;
 
@@ -36,15 +36,10 @@ namespace RemoteMvpApp
 
             ModelChanged += OnModelChanged;
 
-            _users=LoadUsersFromCSV();
+            // Admin user should always be in userlist
+            _users.Add(new User("Admin", "*********"));
 
-            //Test users no validation
-            //for (int i = 1; i < 20; i++)
-            //{
-            //    _users.Add(new User("Test " + i, "PW " + i));
-            //}
-
-
+            LoadUsersFromCSV();
 
         }
 
@@ -91,36 +86,42 @@ namespace RemoteMvpApp
             try
             {
                 using (var file = File.CreateText(Path.Combine(Environment.CurrentDirectory, CSVFilename)))
-            {
-                foreach (var user in users)
                 {
-                    file.WriteLine(user.UserName+";"+ user.Password);
+                    foreach (var user in users)
+                    {
+                        file.WriteLine(user.UserName + ";" + user.Password);
+                    }
                 }
-            }
 
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while write the file: " + e.Message);
             }
-}
+        }
 
-        private List<User> LoadUsersFromCSV()
+        private void LoadUsersFromCSV()
         {
-
-            List<User> CSVusers= new List<User>();
+            List<User> CSVusers = new List<User>();
 
             try
             {
                 using (StreamReader sr = new StreamReader((Path.Combine(Environment.CurrentDirectory, CSVFilename))))
                 {
-                    string line;
                     while (!sr.EndOfStream)
                     {
-                        line = sr.ReadLine();
+                        string line = sr.ReadLine();
                         var splitString = line.Split(';');
-                        CSVusers.Add(new User(splitString[0], splitString[1]));
+                        var newUser = new User(splitString[0], splitString[1]);
+
+                        //To ensure no user are duplicated
+                        if (!_users.Contains(newUser)) CSVusers.Add(newUser);
                     }
+                }
+
+                foreach (var user in CSVusers)
+                {
+                    _users.Add(user);
                 }
             }
             catch (Exception e)
@@ -128,10 +129,9 @@ namespace RemoteMvpApp
                 Console.WriteLine("Error while reading the file or file has not yet been created: " + e.Message);
             }
 
-            return CSVusers;
         }
 
-        public List<string>UserToStringList()
+        public List<string> UserToStringList()
         {
             List<string> stringUserList = new List<string>();
 
