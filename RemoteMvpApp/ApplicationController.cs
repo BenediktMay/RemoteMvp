@@ -11,6 +11,10 @@ namespace RemoteMvpApp
         // ActionEndpoint (to be called by the view)
         private readonly IActionEndpoint _actionEndpoint;
 
+        // sendsequences
+        private int _sendIndex = 1;
+        private int _sendBlocksCount = 0;
+
         public ApplicationController(IActionEndpoint actionEndpoint)
         {
             // Create new Model
@@ -60,7 +64,7 @@ namespace RemoteMvpApp
                     throw new ArgumentOutOfRangeException("Request not supported");
             }
         }
-        
+
         private void Process_Login(RemoteActionEndpoint handler, string username, string password)
         {
             switch (_users.LoginUser(username, password))
@@ -69,7 +73,7 @@ namespace RemoteMvpApp
                     handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, $"Access granted for {username}."));
                     break;
                 case UserListActionResult.UserOkPasswordWrong:
-                    handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Error, "Wrong password.")); 
+                    handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Error, "Wrong password."));
                     break;
                 case UserListActionResult.UserNotExisting:
                     handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Error, $"User {username} not existing."));
@@ -117,14 +121,37 @@ namespace RemoteMvpApp
         private void SentUserList(RemoteActionEndpoint handler)
         {
             List<string> stringUserList = new List<string>();
-            stringUserList=_users.UserToStringList();
+            stringUserList = _users.UserToStringList();
             string responseString = string.Empty;
 
-            for (int i = 0; i < stringUserList.Count; i++)
+            if (_sendBlocksCount == 0)
             {
-                responseString += stringUserList[i];
-                if (stringUserList.Count-1 > i ) responseString += "\n";
+                _sendBlocksCount = stringUserList.Count / 10;
+                if (_sendBlocksCount % 1 != 0) _sendBlocksCount += 1;
+            }
 
+            //Add bit for not finished transmission
+            if (_sendBlocksCount > _sendIndex)
+            {
+                for (int i = _sendIndex * 10; i < _sendIndex * 10 + 10; i++)
+                {
+                    responseString += "0\n";
+                    responseString += stringUserList[i];
+                    if (stringUserList.Count - 1 > i) responseString += "\n";
+                }
+                _sendIndex++;
+            }
+            //add bit for finised transmission
+            else
+            {
+                for (int i = _sendIndex * 10; i < stringUserList.Count; i++)
+                {
+                    responseString += "1\n";
+                    responseString += stringUserList[i];
+                    if (stringUserList.Count - 1 > i) responseString += "\n";
+                }
+                _sendIndex = 1;
+                _sendBlocksCount = 0;
             }
             handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, responseString));
         }

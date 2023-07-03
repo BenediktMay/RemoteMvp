@@ -127,7 +127,7 @@ namespace RemoteMVPAdmin
                             }
                             catch (Exception e)
                             {
-                                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                _adminView.ShowErrorMessage(e.Message);
                             }
 
                             break;
