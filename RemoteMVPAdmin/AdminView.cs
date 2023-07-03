@@ -34,6 +34,10 @@ namespace RemoteMVPAdmin
 
         #region Methods
 
+        /// <summary>
+        /// update listview
+        /// </summary>
+        /// <param name="users"></param>
         public void UpdateView(List<User> users)
         {
             listViewUser.Items.Clear();
@@ -48,16 +52,27 @@ namespace RemoteMVPAdmin
             listViewUser.Update();
         }
 
+        /// <summary>
+        /// MessageBox to print error messages
+        /// </summary>
+        /// <param name="message"></param>
         public void ShowErrorMessage(string message)
         {
             MessageBox.Show(message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        /// <summary>
+        /// MessageBox to inform delete success
+        /// </summary>
+        /// <param name="text"></param>
         public void DeletedOK(string text)
         {
             MessageBox.Show(text, "User Deleted", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
 
+        /// <summary>
+        /// MessageBox to inform failed delete
+        /// </summary>
         public void DeletedNotOK()
         {
             MessageBox.Show("Please Select the user you want to Delete!", "No User Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);

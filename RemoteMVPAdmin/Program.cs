@@ -13,10 +13,11 @@ namespace RemoteMVPAdmin
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
 
+            // if exe is started seperatly
             ApplicationConfiguration.Initialize();
             var admin = new RemoteActionAdapter("localhost", 11000);
-            var adminController = new AdminPresenter(admin);
-            adminController.OpenUI(true);
+            var adminPresenter = new AdminPresenter(admin);
+            adminPresenter.OpenUI(true);
         }
     }
 }

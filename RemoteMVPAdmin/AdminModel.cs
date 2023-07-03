@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RemoteMVPAdmin
 {
     /// <summary>
-    /// User obejct consists name and password
+    /// User obejct contains name and password
     /// </summary>
     public class User
     {

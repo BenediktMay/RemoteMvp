@@ -13,8 +13,6 @@ namespace RemoteMVPAdmin
     {
         #region Declaration
 
-        private event EventHandler UserDeleted;
-
         private AdminView _adminView;
         private AdminModel _adminModel;
         private readonly IActionAdapter _adapter;
@@ -32,31 +30,38 @@ namespace RemoteMVPAdmin
             _adapter = adapter;
             _adminView = new AdminView();
             _adminModel = new AdminModel();
-            UpdateModel();
+
             _adminView.DeleteRequested += OnDeleteRequested;
             _adminModel.ModelChanged += OnModelChanged;
-            this.UserDeleted += OnUserDeleted;
-        }
-
-        #region Events
-
-        private void OnUserDeleted(object? sender, EventArgs e)
-        {
+             
+            // get current data
             UpdateModel();
         }
 
+      
+        #region Events
+     
+        /// <summary>
+        /// Update view when model changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnModelChanged(object? sender, EventArgs e)
         {
             _adminView.UpdateView(_adminModel._users);
         }
 
+        /// <summary>
+        /// request to delete user from access to login
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="indices"></param>
         private async void OnDeleteRequested(object? sender, int indices)
         {
             var user = _adminModel._users[indices];
 
             RemoteActionRequest deleteRequest = new RemoteActionRequest(ActionType.Delete, user.Name, user.Password, UserType.Admin);
             await ProcessRequest(deleteRequest);
-
         }
 
         #endregion
@@ -64,7 +69,7 @@ namespace RemoteMVPAdmin
         #region Methods
 
         /// <summary>
-        /// Get new userlist and update Model
+        /// Get new users in packages and update model
         /// </summary>
         private async void UpdateModel()
         {
@@ -111,19 +116,17 @@ namespace RemoteMVPAdmin
                 case ResponseType.Error:
                     _adminView.ShowErrorMessage(response.Message);
                     break;
+
                 case ResponseType.Success:
                     switch (request.Type)
-                    {
+                    {                      
                         case ActionType.Delete:
-
                             _adminView.DeletedOK(response.Message);
-                            UserDeleted?.Invoke(this, EventArgs.Empty);
-
+                            UpdateModel();
                             break;
-
+                        
                         case ActionType.RequestList:
-
-                            try
+                            try // validate errors in recieving and adding users
                             {
                                 CollectUsers(response.Message);
                             }
@@ -131,19 +134,16 @@ namespace RemoteMVPAdmin
                             {
                                 _adminView.ShowErrorMessage(e.Message);
                             }
-
                             break;
                     }
-
-
-
                     break;
             }
 
         }
 
         /// <summary>
-        /// Adds a Section of all users to the Model
+        /// Adds a package of users to the Model
+        /// Also identifies if there are more to come
         /// return false: not all users transmitted
         /// return true: all users tranmitted
         /// </summary>
@@ -152,10 +152,21 @@ namespace RemoteMVPAdmin
         /// <exception cref="Exception"></exception>
         private bool CollectUsers(string response)
         {
-
+            // split message
             var lines = response.Split('\n');
-            UserIteration(lines);
 
+            // i=1 to jump over msb
+            for (int i = 1; i < lines.Length; i++)
+            {
+                var parts = lines[i].Split(';');
+                User user = new User(parts[0], parts[1]);
+                if (!_adminModel._users.Contains(user))
+                {
+                    _adminModel.AddToList(parts[0], parts[1]);
+                }
+            }
+
+            // detection if more packages are following 
             if (lines[0] == "0")
             {
                 _allUsersRecieved = false;
@@ -166,26 +177,11 @@ namespace RemoteMVPAdmin
                 _allUsersRecieved = true;
                 return true;
             }
-            else throw new Exception("MSB missing");
+            else throw new Exception("MSB missing"); 
 
         }
 
-        /// <summary>
-        /// Iteration to add new users to the model
-        /// </summary>
-        /// <param name="lines"></param>
-        private void UserIteration(string[] lines)
-        {
-            for (int i = 1; i < lines.Length; i++)
-            {
-                var parts = lines[i].Split(';');
-                User user = new User(parts[0], parts[1]);
-                if (!_adminModel._users.Contains(user))
-                {
-                    _adminModel.AddToList(parts[0], parts[1]);
-                }
-            }
-        }
+       
         #endregion
 
     }
