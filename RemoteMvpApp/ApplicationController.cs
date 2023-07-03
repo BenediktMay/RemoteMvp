@@ -126,29 +126,30 @@ namespace RemoteMvpApp
 
             if (_sendBlocksCount == 0)
             {
-                _sendBlocksCount = stringUserList.Count / 10;
-                if (_sendBlocksCount % 1 != 0) _sendBlocksCount += 1;
+                double result = stringUserList.Count / 10.0;
+                if (result % 1 != 0) _sendBlocksCount = (int)result + 1;
+                else _sendBlocksCount = (int)result;
             }
 
             //Add bit for not finished transmission
             if (_sendBlocksCount > _sendIndex)
             {
-                for (int i = _sendIndex * 10; i < _sendIndex * 10 + 10; i++)
+                responseString += "0\n";
+                for (int i = (_sendIndex - 1) * 10; i < _sendIndex * 10; i++)
                 {
-                    responseString += "0\n";
                     responseString += stringUserList[i];
-                    if (stringUserList.Count - 1 > i) responseString += "\n";
+                    if (i+1 < _sendIndex * 10) responseString += "\n";
                 }
                 _sendIndex++;
             }
             //add bit for finised transmission
             else
             {
-                for (int i = _sendIndex * 10; i < stringUserList.Count; i++)
+                responseString += "1\n";
+                for (int i = (_sendIndex - 1) * 10; i < stringUserList.Count; i++)
                 {
-                    responseString += "1\n";
                     responseString += stringUserList[i];
-                    if (stringUserList.Count - 1 > i) responseString += "\n";
+                    if (i < stringUserList.Count-1) responseString += "\n";
                 }
                 _sendIndex = 1;
                 _sendBlocksCount = 0;

@@ -68,10 +68,12 @@ namespace RemoteMVPAdmin
         /// </summary>
         private async void UpdateModel()
         {
+            _adminModel._users.Clear();
             do
             {
                 RemoteActionRequest getList = new RemoteActionRequest(ActionType.RequestList, "", "", UserType.Admin);
                 await ProcessRequest(getList);
+
             } while (!_allUsersRecieved);
         }
 
@@ -150,7 +152,6 @@ namespace RemoteMVPAdmin
         /// <exception cref="Exception"></exception>
         private bool CollectUsers(string response)
         {
-            _adminModel._users.Clear();
 
             var lines = response.Split('\n');
             UserIteration(lines);

@@ -39,10 +39,10 @@ namespace RemoteMvpApp
             _users=LoadUsersFromCSV();
 
             //Test users no validation
-            for (int i = 1; i < 20; i++)
-            {
-                _users.Add(new User("Test " + i, "PW " + i));
-            }
+            //for (int i = 1; i < 20; i++)
+            //{
+            //    _users.Add(new User("Test " + i, "PW " + i));
+            //}
 
 
 
