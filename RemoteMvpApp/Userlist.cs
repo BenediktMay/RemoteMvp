@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Windows.Forms.LinkLabel;
 
 namespace RemoteMvpApp
 {
@@ -23,6 +25,8 @@ namespace RemoteMvpApp
         private record User(string UserName, string Password);
         private readonly List<User> _users;
 
+        private string CSVFilename="users.csv";
+
         public event EventHandler ModelChanged;
 
 
@@ -32,11 +36,15 @@ namespace RemoteMvpApp
 
             ModelChanged += OnModelChanged;
 
+            _users=LoadUsersFromCSV();
+
             //Test users
-            for (int i = 1; i < 20; i++)
-            {
-                _users.Add(new User("Test "+i, "PW "+i));
-            }
+            //for (int i = 1; i < 20; i++)
+            //{
+            //    _users.Add(new User("Test "+i, "PW "+i));
+            //}
+
+
 
         }
 
@@ -79,13 +87,39 @@ namespace RemoteMvpApp
 
         private void SaveUserToCSV(List<User> users)
         {
-            using (var file = File.CreateText(Path.Combine(Environment.CurrentDirectory, "users.csv")))
+            using (var file = File.CreateText(Path.Combine(Environment.CurrentDirectory, CSVFilename)))
             {
                 foreach (var user in users)
                 {
                     file.WriteLine(user.UserName+";"+ user.Password);
                 }
             }
+        }
+
+        private List<User> LoadUsersFromCSV()
+        {
+
+            List<User> CSVusers=null; //Null returned if list empty
+
+            try
+            {
+                using (StreamReader sr = new StreamReader((Path.Combine(Environment.CurrentDirectory, CSVFilename))))
+                {
+                    string line;
+                    while (!sr.EndOfStream)
+                    {
+                        line = sr.ReadLine();
+                        var splitString = line.Split(',');
+                        CSVusers.Add(new User(splitString[0], splitString[1]));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while reading the file or file has not yet been created: " + e.Message);
+            }
+
+            return CSVusers;
         }
 
         public List<string>UserToStringList()
