@@ -36,6 +36,12 @@ namespace RemoteMvpApp
             return task;
         }
 
+        /// <summary>
+        /// handling request
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="request"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void EndpointOnActionPerformed(object? sender, RemoteActionRequest request)
         {
             if (sender is not RemoteActionEndpoint) return;
@@ -65,6 +71,12 @@ namespace RemoteMvpApp
             }
         }
 
+        /// <summary>
+        /// user login
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         private void Process_Login(RemoteActionEndpoint handler, string username, string password)
         {
             switch (_users.LoginUser(username, password))
@@ -84,6 +96,12 @@ namespace RemoteMvpApp
             }
         }
 
+        /// <summary>
+        /// register new User
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         private void Process_Register(RemoteActionEndpoint handler, string username, string password)
         {
             switch (_users.RegisterUser(username, password))
@@ -166,6 +184,7 @@ namespace RemoteMvpApp
         }
 
 
+        // no use 
         /// <summary>
         /// Helper method to parse semicolon-separated key=value pairs
         /// </summary>
