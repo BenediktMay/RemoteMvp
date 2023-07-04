@@ -177,7 +177,7 @@ namespace RemoteMVPAdmin
                 _allUsersRecieved = true;
                 return true;
             }
-            else throw new Exception("MSB missing"); 
+            else throw new InvalidOperationException("MSB missing"); 
 
         }
 

@@ -135,8 +135,18 @@ namespace RemoteMvpApp
             }
             else
             {
-                _users.RemoveUser(username);
-                handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, "User was deleted (probably fails silently ;) )"));
+                try
+                {
+                    _users.RemoveUser(username);
+                    Console.WriteLine($"User {username} was deleted");
+                    handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Success, $"User: {username} was deleted"));
+
+                }
+                catch
+                {
+                    Console.WriteLine($"ERROR User {username} was probably not deleted");
+                    handler.PerformActionResponse(handler.Handler, new RemoteActionResponse(ResponseType.Error, "User was probably not deleted"));
+                }
             }
         }
 

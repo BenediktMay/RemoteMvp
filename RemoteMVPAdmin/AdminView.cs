@@ -26,7 +26,7 @@ namespace RemoteMVPAdmin
             }
             catch (Exception)
             {
-                DeletedNotOK();
+                DeletionFailed();
             }  
         }
 
@@ -73,7 +73,7 @@ namespace RemoteMVPAdmin
         /// <summary>
         /// MessageBox to inform failed delete
         /// </summary>
-        public void DeletedNotOK()
+        public void DeletionFailed()
         {
             MessageBox.Show("Please Select the user you want to Delete!", "No User Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
